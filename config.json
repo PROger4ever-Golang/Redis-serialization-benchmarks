@@ -1,0 +1,10 @@
+{
+  "CommonRedis": {
+    "Host": "common-redis.docker",
+    "Port": 6379
+  },
+  "RejsonRedis": {
+    "Host": "rejson-redis.docker",
+    "Port": 6379
+  }
+}

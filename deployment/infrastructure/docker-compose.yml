@@ -1,0 +1,74 @@
+version: '2'
+services:
+
+  RSB-Common-redis:
+    image: redis:alpine
+    container_name: ${COMMON_REDIS_CONTAINER_NAME}
+    restart: always
+    volumes:
+      - "Common-redis-Data:/data"
+    ports:
+      - "${COMMON_REDIS_ADDRESS}:6379"
+    networks:
+      Common-nertwork:
+        aliases:
+          - "common-redis.docker"
+
+  RSB-Common-redis-Web:
+    image: erikdubbelboer/phpredisadmin
+    container_name: RSB-Common-redis-Web
+    restart: always
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+      - REDIS_1_HOST=common-redis.docker
+      - REDIS_1_PORT=6379
+    ports:
+      - "${COMMON_REDIS_WEB_ADDRESS}:80"
+    networks:
+      Common-nertwork:
+        aliases:
+          - web.common-redis.docker"
+    depends_on:
+      - RSB-Common-redis
+      
+
+  RSB-Rejson-redis:
+    image: redislabs/rejson:latest
+    container_name: ${REJSON_REDIS_CONTAINER_NAME}
+    restart: always
+    volumes:
+      - "Rejson-redis-Data:/data"
+    ports:
+      - "${REJSON_REDIS_ADDRESS}:6379"
+    networks:
+      Rejson-nertwork:
+        aliases:
+          - "rejson-redis.docker"
+
+  RSB-Rejson-redis-Web:
+    image: erikdubbelboer/phpredisadmin
+    container_name: RSB-Rejson-redis-Web
+    restart: always
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+      - REDIS_1_HOST=rejson-redis.docker
+      - REDIS_1_PORT=6379
+    ports:
+      - "${REJSON_REDIS_WEB_ADDRESS}:80"
+    networks:
+      Rejson-nertwork:
+        aliases:
+          - web.rejson-redis.docker"
+    depends_on:
+      - RSB-Rejson-redis
+
+
+networks:
+  Common-nertwork:
+  Rejson-nertwork:
+
+volumes:
+  Common-redis-Data:
+  Rejson-redis-Data:

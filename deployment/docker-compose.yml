@@ -1,0 +1,30 @@
+version: '2'
+services:
+
+  RSB-Benchmarks:
+    build:
+       dockerfile: deployment/Dockerfile
+       context: ..
+       args:
+         GOLANG_TAG: latest
+         PROJECT_PATH: ${PROJECT_PATH}
+    image: ${IMAGE_NAME}
+    container_name: ${CONTAINER_NAME}
+    command: ${GO_COMMAND}
+    restart: "no"
+    networks:
+      rsb0infrastructure_Common-nertwork:
+        aliases:
+          - benchmarks.docker
+      rsb0infrastructure_Rejson-nertwork:
+        aliases:
+          - benchmarks.docker
+    external_links:
+      - ${COMMON_REDIS_CONTAINER_NAME}
+      - ${REJSON_REDIS_CONTAINER_NAME}
+
+networks:
+  rsb0infrastructure_Common-nertwork:
+    external: true
+  rsb0infrastructure_Rejson-nertwork:
+    external: true
